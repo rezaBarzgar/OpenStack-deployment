@@ -33,3 +33,12 @@ make sure you are in Admin project,
 select system default from admin tab,
 click on update defaults and change it.
 
+#creating project Cloud
+from tab Identity/project you can create a new Project.
+by selecting "Modify Qutas" from project's action bar you can edit Qoutas
+
+#creatin User reza-mamadreza
+from tab Identity/User you can create a new user.
+
+#now we can access our new project from new user
+
