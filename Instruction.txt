@@ -1,1 +1,16 @@
+ssh root@185.255.90.157
+#editing source list in /etc/apt/sources.list
+nano /etc/apt/sources.list
 
+#initial steps for installing ansible victoria
+apt-get update
+apt-get dist-upgrade
+reboot
+
+#cloning Bootstrap Ansible
+git clone https://opendev.org/openstack/openstack-ansible \
+    /opt/openstack-ansible
+cd /opt/openstack-ansible
+
+# checking stable version
+git checkout stable/victoria
