@@ -27,3 +27,9 @@ cd /opt/openstack-ansible/playbooks
 openstack-ansible setup-hosts.yml
 openstack-ansible setup-infrastructure.yml
 openstack-ansible setup-openstack.yml
+
+#editing instances conditions
+make sure you are in Admin project,
+select system default from admin tab,
+click on update defaults and change it.
+
