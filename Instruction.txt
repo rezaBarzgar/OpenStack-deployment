@@ -14,3 +14,16 @@ cd /opt/openstack-ansible
 
 # checking stable version
 git checkout stable/victoria
+
+#run the bootstrap ansible script
+scripts/bootstrap-ansible.sh
+
+#select extra services and run other script
+export SCENARIO='aio_lxc_barbican_ceph'
+scripts/bootstrap-aio.sh
+
+#after that we should run the playbooks
+cd /opt/openstack-ansible/playbooks
+openstack-ansible setup-hosts.yml
+openstack-ansible setup-infrastructure.yml
+openstack-ansible setup-openstack.yml
