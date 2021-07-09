@@ -1,1 +1,12 @@
+#first of all we have to change /etc/environment file
+#and add below lines in this file 
 
+HTTP_PROXY=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+http_proxy=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+HTTPS_PROXY=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+https_proxy=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+NO_PROXY=127.0.0.1,localhost
+no_proxy=127.0.0.1,localhost
+
+#after that we should run the below commmand
+source /etc/environment
