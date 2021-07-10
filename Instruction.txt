@@ -42,3 +42,6 @@ from tab Identity/User you can create a new user.
 
 #now we can access our new project from new user
 
+#now we create network using the networks tab and using subnet 192.168.65.0/26
+#then we create router and connect two sides one to public network other to private network
+#finally we create load ballancer and giving it a floating ip
