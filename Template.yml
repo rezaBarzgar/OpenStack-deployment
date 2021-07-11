@@ -1,11 +1,11 @@
 heat_template_version: 2015-04-30
 resources:
-  User:
-    type: OS::Keystone::User
+  server:
+    type: OS::Nova::Server
     properties:
-      default_project: Cloud
-      description: creating with stack
-      enabled: True
-      name: test
-      password: 1234
-
+      admin_pass: 1234
+      flavor: app_flavor
+      image: ubuntu20.04
+      key_name: test
+      name: testServer
+      networks: [{"network": public}]
