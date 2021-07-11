@@ -1,14 +1,5 @@
 heat_template_version: 2015-04-30
 resources:
-  server:
-    type: OS::Nova::Server
-    properties:
-      admin_pass: 1234
-      flavor: app_flavor
-      image: ubuntu20.04
-      key_name: test
-      name: testServer
-      networks: [{"network": public}]
   network:
     type: OS::Neutron::Net
     properties:
@@ -26,3 +17,12 @@ resources:
         allocation_pools:
         - start: 192.168.65.2
           end: 192.168.65.62
+  server:
+    type: OS::Nova::Server
+    properties:
+      admin_pass: 1234
+      flavor: app_flavor
+      image: ubuntu20.04
+      key_name: root
+      name: testServer
+      networks: [{ "network": { get_resource: network }}]
