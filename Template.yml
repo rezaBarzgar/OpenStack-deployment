@@ -9,3 +9,20 @@ resources:
       key_name: test
       name: testServer
       networks: [{"network": public}]
+  network:
+    type: OS::Neutron::Net
+    properties:
+      admin_state_up: True
+      name: PrivateNetwork
+      port_security_enabled: False
+      shared: True
+  subnet:
+    type: OS::Neutron::Subnet
+    properties:
+        cidr: 192.168.65.0/26
+        gateway_ip: 192.168.65.1
+        name: Cloudsubnet
+        network_id: { get_resource: network }
+        allocation_pools:
+        - start: 192.168.65.2
+          end: 192.168.65.62
