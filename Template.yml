@@ -1,1 +1,11 @@
+heat_template_version: 2015-04-30
+resources:
+  User:
+    type: OS::Keystone::User
+    properties:
+      default_project: Cloud
+      description: creating with stack
+      enabled: True
+      name: test
+      password: 1234
 
