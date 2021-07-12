@@ -55,14 +55,14 @@ resources:
       key_name: root
       name: testServer
       networks: [{ "network": { get_resource: network }}]
-  server2:
+  database:
     type: OS::Nova::Server
     properties:
       admin_pass: 1234
       flavor: { get_resource: database_flavor}
-      image: ubuntu20.04
+      image: DB snapshot
       key_name: root
-      name: testDatabase
+      name: DatabaseNode
       networks: [{ "network": { get_resource: network }}]
   router:
     type: OS::Neutron::Router
