@@ -1,12 +1,27 @@
 heat_template_version: 2015-04-30
 resources:
+
+  server_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      disk: 5
+      name: serverFlavor
+      ram: 1024
+      vcpus: 1
+  database_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      disk: 20
+      name: databaseFlavor
+      ram: 1024
+      vcpus: 1
   network:
     type: OS::Neutron::Net
     properties:
       admin_state_up: True
-      name: PrivateNetwork
+      name: auth_app
       port_security_enabled: False
-      shared: True
+      shared: False
   subnet:
     type: OS::Neutron::Subnet
     properties:
@@ -17,14 +32,37 @@ resources:
         allocation_pools:
         - start: 192.168.65.2
           end: 192.168.65.62
+  # security_gp:
+  #   type: OS::Neutron::SecurityGroup
+  #   properties:
+  #     name: SSH for instances
+  # security_rule:
+  #   type: OS::Neutron::SecurityGroupRule
+  #   properties:
+  #     description: a role for group
+  #     direction: ingress 
+  #     ethertype: IPv4
+  #     port_range_max: 22
+  #     port_range_min: 22
+  #     protocol: tcp
+  #     security_group: { get_resource: security_gp }
   server:
     type: OS::Nova::Server
     properties:
       admin_pass: 1234
-      flavor: app_flavor
+      flavor: { get_resource: server_flavor}
       image: ubuntu20.04
       key_name: root
       name: testServer
+      networks: [{ "network": { get_resource: network }}]
+  server2:
+    type: OS::Nova::Server
+    properties:
+      admin_pass: 1234
+      flavor: { get_resource: database_flavor}
+      image: ubuntu20.04
+      key_name: root
+      name: testDatabase
       networks: [{ "network": { get_resource: network }}]
   router:
     type: OS::Neutron::Router
@@ -36,4 +74,5 @@ resources:
     type: OS::Neutron::RouterInterface
     properties:
       router_id: { get_resource: router }
-      subnet_id: { get_resource: subnet } 
+      subnet_id: { get_resource: subnet }
+
