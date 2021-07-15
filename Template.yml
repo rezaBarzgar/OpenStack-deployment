@@ -30,21 +30,21 @@ resources:
       router_id: { get_resource: router }
       subnet_id: { get_resource: subnet }
 #--------------------------end of network--------------------------------------
-  app_flavor:
-    type: OS::Nova::Flavor
-    properties:
-      disk: 5
-      name: app_flavor
-      ram: 1024
-      vcpus: 1
-  
-  db_flavor:
-    type: OS::Nova::Flavor
-    properties:
-      disk: 20
-      name: db_flavor
-      ram: 1024
-      vcpus: 1
+#  app_flavor:
+#    type: OS::Nova::Flavor
+#    properties:
+#      disk: 5
+#      name: app_flavor
+#      ram: 1024
+#      vcpus: 1
+#  
+#  db_flavor:
+#    type: OS::Nova::Flavor
+#    properties:
+#      disk: 20
+#      name: db_flavor
+#     ram: 1024
+#      vcpus: 1
 #--------------------------end of Flavor--------------------------------------
   key_pair:
     type: OS::Nova::KeyPair
