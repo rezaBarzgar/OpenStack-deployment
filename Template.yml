@@ -66,36 +66,36 @@ ssh_group:
 
 tcp_db_group:
   type: OS::Neutron::SecurityGroupRule
-    properties:
-      direction: ingress
-      ethertype: IPv4
-      port_range_max: 0
-      port_range_min: 65535
-      protocol: tcp
-      remote_ip_prefix: 192.168.65.0/26
-      security_group: { get_resource: db_group}
+  properties:
+    direction: ingress
+    ethertype: IPv4
+    port_range_max: 0
+    port_range_min: 65535
+    protocol: tcp
+    remote_ip_prefix: 192.168.65.0/26
+    security_group: { get_resource: db_group}
 
 udp_db_group:
   type: OS::Neutron::SecurityGroupRule
-    properties:
-      direction: ingress
-      ethertype: IPv4
-      port_range_max: 0
-      port_range_min: 65535
-      protocol: udp
-      remote_ip_prefix: 192.168.65.0/26
-      security_group: { get_resource: db_group}
+  properties:
+    direction: ingress
+    ethertype: IPv4
+    port_range_max: 0
+    port_range_min: 65535
+    protocol: udp
+    remote_ip_prefix: 192.168.65.0/26
+    security_group: { get_resource: db_group}
 
 ssh_rule_group:
   type: OS::Neutron::SecurityGroupRule
-    properties:
-      direction: ingress
-      ethertype: IPv4
-      port_range_max: 22
-      port_range_min: 22
-      protocol: tcp
-      remote_ip_prefix: 192.168.65.0/26
-      security_group: { get_resource: ssh_group}
+  properties:
+    direction: ingress
+    ethertype: IPv4
+    port_range_max: 22
+    port_range_min: 22
+    protocol: tcp
+    remote_ip_prefix: 192.168.65.0/26
+    security_group: { get_resource: ssh_group}
 #--------------------------end of Security group--------------------------------------
 
 db_instance:
