@@ -30,22 +30,6 @@ resources:
       router_id: { get_resource: router }
       subnet_id: { get_resource: subnet }
 #--------------------------end of network--------------------------------------
-#  app_flavor:
-#    type: OS::Nova::Flavor
-#    properties:
-#      disk: 5
-#      name: app_flavor
-#      ram: 1024
-#      vcpus: 1
-#  
-#  db_flavor:
-#    type: OS::Nova::Flavor
-#    properties:
-#      disk: 20
-#      name: db_flavor
-#     ram: 1024
-#      vcpus: 1
-#--------------------------end of Flavor--------------------------------------
   key_pair:
     type: OS::Nova::KeyPair
     properties:
@@ -53,63 +37,63 @@ resources:
       public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDD37HsvZc2UC+69qubp46tl5O3LvOb/sLq1rjqlMwulOLIpl84VzGdhSmcdenbs2TA1lfSAMkeqyxjBgAzUKQSZai1wpdMDJIYdybGynMgdSDV1uEaHw0ypuvEFxELfwYpQIqy5LIIFkHbkCLqC/VSxqYxCgwggIxzpxlJ6z1kedKTMKIheVGX6IXt/6f/cpqJfg1Lyoju8hH3qErJIixJeclD5r1nY28xzEj3Cj2fHRykeTTn64Tj3PNNvQMxsguYdwTem4nGlsZ3nbvjeY+3otcZpjqH7faj55tKtK+VMpTY8X0uH3OoKKBtu3cw4/WbFFFntXfE333zu84PoPFBD0qEetNs8ZWqAUjBW1skOGqgK/env4yyZfvulKqmfYdhZzSx7TPO14BZ5IK4piFFiGObCVAiWDUwFyM1n3cfSusurbaj6YqfNsBZNJtTU6ENN01JuSf+V5Uliojph87iSHfJVNLqfgw6UmDiLcY5ZZ1LPIUQJCMZbBotCqNunk= root@root
       type: ssh
 #--------------------------end of Keypair--------------------------------------
-db_group:
+  db_group:
     type: OS::Neutron::SecurityGroup
     properties:
       description: Security Group for db, created with Heat
       name: db_group
-ssh_group:
+  ssh_group:
     type: OS::Neutron::SecurityGroup
     properties:
       description: Security Group for db, created with Heat
       name: ssh_group
 
-tcp_db_group:
-  type: OS::Neutron::SecurityGroupRule
-  properties:
-    direction: ingress
-    ethertype: IPv4
-    port_range_max: 0
-    port_range_min: 65535
-    protocol: tcp
-    remote_ip_prefix: 192.168.65.0/26
-    security_group: { get_resource: db_group}
+  tcp_db_group:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      direction: ingress
+      ethertype: IPv4
+      port_range_max: 0
+      port_range_min: 65535
+      protocol: tcp
+      remote_ip_prefix: 192.168.65.0/26
+      security_group: { get_resource: db_group }
 
-udp_db_group:
-  type: OS::Neutron::SecurityGroupRule
-  properties:
-    direction: ingress
-    ethertype: IPv4
-    port_range_max: 0
-    port_range_min: 65535
-    protocol: udp
-    remote_ip_prefix: 192.168.65.0/26
-    security_group: { get_resource: db_group}
+  udp_db_group:
+      type: OS::Neutron::SecurityGroupRule
+      properties:
+        direction: ingress
+        ethertype: IPv4
+        port_range_max: 0
+        port_range_min: 65535
+        protocol: udp
+        remote_ip_prefix: 192.168.65.0/26
+        security_group: { get_resource: db_group }
 
-ssh_rule_group:
-  type: OS::Neutron::SecurityGroupRule
-  properties:
-    direction: ingress
-    ethertype: IPv4
-    port_range_max: 22
-    port_range_min: 22
-    protocol: tcp
-    remote_ip_prefix: 192.168.65.0/26
-    security_group: { get_resource: ssh_group}
-#--------------------------end of Security group--------------------------------------
+  ssh_rule_group:
+      type: OS::Neutron::SecurityGroupRule
+      properties:
+        direction: ingress
+        ethertype: IPv4
+        port_range_min: 21
+        port_range_max: 23
+        protocol: tcp
+        remote_ip_prefix: 192.168.65.0/26
+        security_group: { get_resource: ssh_group }
+  #--------------------------end of Security group--------------------------------------
 
-db_instance:
+  db_instance:
     type: OS::Nova::Server
     properties:
       availability_zone: nova
-      flavor: { get_resource: db_flavor }
+      flavor: db_flavor
       image: database_snapshot
       key_name: { get_resource: key_pair }
       name: database_instance
-      networks: [{"network": { get_resource: network }, "fixed_ip": 192.168.65.53, "subnet": { get_resource: subnet }}]
-      security_groups: [{ get_resource: db_group } , { get_resource: ssh_group }]
+      networks: [{"network": { get_resource: network }, "fixed_ip": 192.168.65.53, "subnet": { get_resource: subnet } } ]
+      security_groups: [{ get_resource: db_group } , { get_resource: ssh_group } ]
 
-app_instance_group:
+  app_instance_group:
     type: OS::Heat::ResourceGroup
     properties:
       count: 3
@@ -117,9 +101,9 @@ app_instance_group:
         type: OS::Nova::Server
         properties:
           availability_zone: nova
-          flavor: { get_resource: app_flavor }
+          flavor: app_flavor
           image: app_snapshot
           key_name: { get_resource: key_pair }
           name: app_instance_%index%
-          networks: [{"network": { get_resource: network }, "subnet": { get_resource: subnet }}]
-          security_groups: [{ get_resource: ssh_group }]
+          networks: [{"network": { get_resource: network }, "subnet": { get_resource: subnet } } ]
+          security_groups: [{ get_resource: ssh_group } ]
