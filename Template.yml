@@ -104,7 +104,6 @@ db_instance:
       availability_zone: nova
       flavor: { get_resource: db_flavor }
       image: database_snapshot
-
       key_name: { get_resource: key_pair }
       name: database_instance
       networks: [{"network": { get_resource: network }, "fixed_ip": 192.168.65.53, "subnet": { get_resource: subnet }}]
