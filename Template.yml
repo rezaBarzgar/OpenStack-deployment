@@ -1,4 +1,5 @@
 heat_template_version: 2015-04-30
+# 3c52eccd-1ce1-48ae-baa0-51e4cfb39f85 subnet id
 resources:
   network:
     type: OS::Neutron::Net
@@ -36,10 +37,15 @@ resources:
     properties:
       description: Security Group for db, created with Heat
       name: db_group
+  app_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Security Group for app, created with Heat
+      name: app_group
   ssh_group:
     type: OS::Neutron::SecurityGroup
     properties:
-      description: Security Group for db, created with Heat
+      description: Security Group for ssh, created with Heat
       name: ssh_group
 
   tcp_db_group:
@@ -70,6 +76,17 @@ resources:
         protocol: tcp
         remote_ip_prefix: 0.0.0.0/0
         security_group: { get_resource: ssh_group }
+  
+  http_rule_group:
+      type: OS::Neutron::SecurityGroupRule
+      properties:
+        direction: ingress
+        ethertype: IPv4
+        port_range_min: 80
+        port_range_max: 80
+        protocol: tcp
+        remote_ip_prefix: 192.168.65.0/26
+        security_group: { get_resource: app_group }
 
   ping_rule:
       type: OS::Neutron::SecurityGroupRule
@@ -112,7 +129,7 @@ resources:
           image: app_snapshot
           name: app_instance_1
           networks: [{"network": { get_resource: network }, "fixed_ip": 192.168.65.54,"subnet": { get_resource: subnet } } ]
-          security_groups: [{ get_resource: ssh_group } ]
+          security_groups: [{ get_resource: ssh_group } , { get_resource: app_group } ]
           
   server2:
         type: OS::Nova::Server
@@ -122,7 +139,7 @@ resources:
           image: app_snapshot
           name: app_instance_2
           networks: [{"network": { get_resource: network }, "fixed_ip": 192.168.65.55,"subnet": { get_resource: subnet } } ]
-          security_groups: [{ get_resource: ssh_group } ]
+          security_groups: [{ get_resource: ssh_group } , { get_resource: app_group } ]
 
   server3:
         type: OS::Nova::Server
@@ -132,4 +149,84 @@ resources:
           image: app_snapshot
           name: app_instance_3
           networks: [{"network": { get_resource: network }, "fixed_ip": 192.168.65.56,"subnet": { get_resource: subnet } } ]
-          security_groups: [{ get_resource: ssh_group } ]
+          security_groups: [{ get_resource: ssh_group } , { get_resource: app_group } ]
+
+  loadbalancer:
+    type: OS::Octavia::LoadBalancer
+    properties:
+      admin_state_up: True
+      name: load_balancer
+      vip_subnet: { get_resource: subnet }
+
+  listner:
+    type: OS::Octavia::Listener
+    properties:
+      admin_state_up: True
+      connection_limit: -1
+      loadbalancer: { get_resource: loadbalancer }
+      name: listner
+      protocol: HTTP
+      protocol_port: 80
+  
+  pool:
+    type: OS::Octavia::Pool
+    properties:
+      admin_state_up: True
+      lb_algorithm: ROUND_ROBIN
+      listener: { get_resource: listner }
+      loadbalancer: { get_resource: loadbalancer }
+      name: pool
+      protocol: HTTP
+
+  pool_member1:
+    type: OS::Octavia::PoolMember
+    properties:
+      address: 192.168.65.54
+      admin_state_up: True
+      pool: { get_resource: pool }
+      protocol_port: 80
+      subnet: { get_resource: subnet }
+      weight: 1
+
+  pool_member2:
+    type: OS::Octavia::PoolMember
+    properties:
+      address: 192.168.65.55
+      admin_state_up: True
+      pool: { get_resource: pool }
+      protocol_port: 80
+      subnet: { get_resource: subnet }
+      weight: 1
+
+  pool_member3:
+    type: OS::Octavia::PoolMember
+    properties:
+      address: 192.168.65.56
+      admin_state_up: True
+      pool: { get_resource: pool }
+      protocol_port: 80
+      subnet: { get_resource: subnet }
+      weight: 1
+
+  # healthmonitor:
+  #   type: OS::Octavia::HealthMonitor
+  #   properties:
+  #     admin_state_up: True
+  #     delay: 20
+  #     expected_codes: 200
+  #     http_method: GET
+  #     max_retries: 30
+  #     pool: { get_resource: pool }
+  #     timeout: 30
+  #     type: HTTP
+  #     url_path: /authentiq/v1/heartbeat
+
+  healthmonitor:
+    type: OS::Octavia::HealthMonitor
+    properties:
+      admin_state_up: True
+      delay: 5
+      max_retries: 10
+      pool: { get_resource: pool }
+      timeout: 5
+      type: PING
