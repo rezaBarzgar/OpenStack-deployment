@@ -234,25 +234,26 @@ resources:
       subnet: { get_resource: subnet }
       weight: 1
 
-  # healthmonitor:
-  #   type: OS::Octavia::HealthMonitor
-  #   properties:
-  #     admin_state_up: True
-  #     delay: 20
-  #     expected_codes: 200
-  #     http_method: GET
-  #     max_retries: 30
-  #     pool: { get_resource: pool }
-  #     timeout: 30
-  #     type: HTTP
-  #     url_path: /authentiq/v1/heartbeat
-
   healthmonitor:
     type: OS::Octavia::HealthMonitor
     properties:
       admin_state_up: True
       delay: 5
+      expected_codes: 200
+      http_method: GET
       max_retries: 10
       pool: { get_resource: pool }
       timeout: 5
-      type: PING
+      type: HTTP
+      url_path: /authentiq/v1/heartbeat
+
+  # healthmonitor:
+  #   type: OS::Octavia::HealthMonitor
+  #   properties:
+  #     admin_state_up: True
+  #     delay: 5
+  #     max_retries: 10
+  #     pool: { get_resource: pool }
+  #     timeout: 5
+  #     type: PING
+
