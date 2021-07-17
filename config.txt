@@ -1,0 +1,7 @@
+#cloud-config
+ssh_pwauth: False
+chpasswd:
+  list: |
+     root:reza1234
+     ubuntu:reza1234
+  expire: False

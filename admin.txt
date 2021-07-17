@@ -1,0 +1,4 @@
+user:admin
+password:8fb2a283b8c1f7eabbd283c84210aebe3
+
+sudo nc -l -p 80

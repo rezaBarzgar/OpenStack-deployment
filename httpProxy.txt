@@ -1,0 +1,20 @@
+nano /etc/environment
+
+
+
+HTTP_PROXY=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+http_proxy=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+HTTPS_PROXY=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+https_proxy=http://digitaluser:cCYcP8XAHEVxnrkz@uk.sayidhosseini.me:6666/
+NO_PROXY=127.0.0.1,localhost
+no_proxy=127.0.0.1,localhost
+
+source /etc/environment
+
+containers : lxc-ls -f
+stop container : lxc-stop -n aio1_cin...
+stop container : lxc-start -n aio1_cin...
+
+go to a container : lxc-attach -n aio1_glance...
+
+. openrc
