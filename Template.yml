@@ -78,18 +78,11 @@ resources:
     properties:
       direction: ingress
       ethertype: IPv4
+      port_range_min: 27017
+      port_range_max: 27017
       protocol: tcp
       remote_ip_prefix: { get_param: cidr }
       security_group: { get_resource: db_group }
-
-  udp_db_group:
-      type: OS::Neutron::SecurityGroupRule
-      properties:
-        direction: ingress
-        ethertype: IPv4
-        protocol: udp
-        remote_ip_prefix: { get_param: cidr }
-        security_group: { get_resource: db_group }
 
   ssh_rule_group:
       type: OS::Neutron::SecurityGroupRule
@@ -128,6 +121,7 @@ resources:
     properties:
       availability_zone: nova
       flavor: db_flavor
+      key_name: aio1
       image: database_snapshot
       name: database_instance
       networks: [{"network": { get_resource: network }, "fixed_ip": { get_param: db_ip }, "subnet": { get_resource: subnet } } ]
@@ -153,6 +147,7 @@ resources:
           availability_zone: nova
           flavor: app_flavor
           image: app_snapshot
+          key_name: aio1
           name: app_instance_1
           networks: [{"network": { get_resource: network }, "fixed_ip": { get_param: app_1},"subnet": { get_resource: subnet } } ]
           security_groups: [{ get_resource: ssh_group } , { get_resource: app_group } ]
@@ -163,6 +158,7 @@ resources:
           availability_zone: nova
           flavor: app_flavor
           image: app_snapshot
+          key_name: aio1
           name: app_instance_2
           networks: [{"network": { get_resource: network }, "fixed_ip": { get_param: app_2},"subnet": { get_resource: subnet } } ]
           security_groups: [{ get_resource: ssh_group } , { get_resource: app_group } ]
@@ -173,6 +169,7 @@ resources:
           availability_zone: nova
           flavor: app_flavor
           image: app_snapshot
+          key_name: aio1
           name: app_instance_3
           networks: [{"network": { get_resource: network }, "fixed_ip": { get_param: app_3},"subnet": { get_resource: subnet } } ]
           security_groups: [{ get_resource: ssh_group } , { get_resource: app_group } ]
